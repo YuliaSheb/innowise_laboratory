@@ -1,0 +1,17 @@
+[project]
+name = "lecture-1"
+version = "0.1.0"
+description = "Setting up a Python Project: Environment, Dependencies and Version Control"
+authors = [
+    {name = "YuliaSheb"}
+]
+readme = "README.md"
+requires-python = "3.11"
+dependencies = [
+    "colorama (>=0.4.6,<0.5.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
