@@ -29,7 +29,7 @@ def print_profile(profile:dict) -> None:
                     - "age" (int)
                     - "life stage" (str)
                     - "hobbies" (list[str])
-        """
+    """
     print("--- \nProfile Summary:")
     print(f'Name: {profile["full name"]}')
     print(f'Age: {profile["age"]}')
