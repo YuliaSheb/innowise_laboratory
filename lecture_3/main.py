@@ -1,4 +1,4 @@
-students = {}
+students = []
 avg_list = {}
 
 
@@ -15,9 +15,13 @@ def compute_avg():
                 Replaces the contents of `avg_list`.
     """
     avg_list.clear()
-    for name, grades in students.items():
-        if grades:
-            avg_list[name] = round((sum(grades) / len(grades)),2)
+
+    for student in students:
+        name = student["name"]
+        grades = student["grades"]
+
+        if grades:  # only if student has grades
+            avg_list[name] = round(sum(grades) / len(grades), 2)
 
 
 def add_student():
@@ -44,7 +48,12 @@ def add_student():
         print("Student already exists.")
         return
 
-    students[name] = []
+    for student in students:
+        if student["name"] == name:
+            print("Student already exists.")
+            return
+
+    students.append({"name": name, "grades": []})
 
 
 def add_grades():
@@ -67,26 +76,33 @@ def add_grades():
                     - The user enters a non-numeric value.
     """
     name = input("Enter student name: ")
-    if name not in students:
+    student = None
+    for s in students:
+        if s["name"] == name:
+            student = s
+            break
+
+    if student is None:
         print("Invalid input. Please enter an existing student name.")
-    else:
-        while True:
-            grade = input("Enter a grade (or 'done' to finish): ")
+        return
 
-            if grade.lower() == "done":
-                break
+    while True:
+        grade = input("Enter a grade (or 'done' to finish): ")
 
-            try:
-                grade = int(grade)
+        if grade.lower() == "done":
+            break
 
-                if not 0 <= grade <= 100:
-                    raise ValueError("Grade must be between 0 and 100.")
+        try:
+            grade = int(grade)
 
-                students[name].append(grade)
+            if not 0 <= grade <= 100:
+                raise ValueError("Grade must be between 0 and 100.")
 
-            except ValueError:
-                print("Invalid input. Please enter a number from 0 to 100.")
-                continue
+            student["grades"].append(grade)
+
+        except ValueError:
+            print("Invalid input. Please enter a number from 0 to 100.")
+            continue
 
     compute_avg()
 
@@ -107,22 +123,27 @@ def show_report():
     """
     print("--- Student Report ---")
     if not students:
-        print("Student not found.")
-    else:
-        for name, grades in students.items():
-            if name not in avg_list:
-                avg_grade = "N/A"
-            else:
-                avg_grade = avg_list[name]
-            print(f"{name}'s average grade is {avg_grade}.")
-        print("-"*20)
-        if avg_list:  # only if there are actual grades
-            print("Max Average:", max(avg_list.values()))
-            print("Min Average:", min(avg_list.values()))
-            print("Overall Average:",
-                  round(sum(avg_list.values()) / len(avg_list.values()), 2))
+        print("No students in the system.")
+        return
+
+    for student in students:
+        name = student["name"]
+        if name in avg_list:
+            avg_grade = avg_list[name]
         else:
-            print("No grades available to calculate statistics.")
+            avg_grade = "N/A"
+
+        print(f"{name}'s average grade is {avg_grade}.")
+
+    print("-" * 20)
+
+    if avg_list:
+        print("Max Average:", max(avg_list.values()))
+        print("Min Average:", min(avg_list.values()))
+        print("Overall Average:",
+              round(sum(avg_list.values()) / len(avg_list.values()), 2))
+    else:
+        print("No grades available to calculate statistics.")
 
 
 def top_student():
